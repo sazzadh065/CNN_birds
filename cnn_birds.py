@@ -112,9 +112,9 @@ myModel = CNN()
 history = myModel.fit(cfg.epoch,cfg.learning_rate,cfg.weight_decay, train_loader, valid_loader)
 
 postprocessing.plot_accuracies(history)
-
+#plt.savefig('accuracy.jpg')
 postprocessing.plot_losses(history)
-
+#plt.savefig('losses')
 print(history)
 
 #train_losses = [x['train_loss'] for x in history]
@@ -124,21 +124,11 @@ print(history)
 torch.save(model.state_dict(), 'model.pth')
 history_df = pd.DataFrame.from_dict(history)
 history_df.to_csv('history.csv')
-#model.load_state_dict(torch.load('model.pth'))
-
-history_2 = myModel.fit(cfg.epoch,cfg.learning_rate,cfg.weight_decay, train_loader, valid_loader)
 
 
-#plot_accuracies(history2)
-
-#history3= history+history2
 
 
-#plot_accuracies(history3)
-#plt.savefig('accuracy.jpg')
 
-#plot_losses(history3)
-#plt.savefig('losses')
 
 
 
