@@ -112,24 +112,47 @@ myModel = CNN()
 history = myModel.fit(cfg.epoch,cfg.learning_rate,cfg.weight_decay, train_loader, valid_loader)
 
 postprocessing.plot_accuracies(history)
-#plt.savefig('accuracy.jpg')
+
 postprocessing.plot_losses(history)
-#plt.savefig('losses')
+
 print(history)
 
 #train_losses = [x['train_loss'] for x in history]
 #val_losses = [x['val_loss'] for x in history]
 #accuracies = [x['val_acc'] for x in history]
         
-torch.save(model.state_dict(), 'model.pth')
-history_df = pd.DataFrame.from_dict(history)
-history_df.to_csv('history.csv')
+torch.save(myModel.state_dict(), 'model.pth')
+#history_df = pd.DataFrame.from_dict(history)
+#history_df.to_csv('history.csv')
+#myModel.load_state_dict(torch.load('model.pth'))
+
+#history_2 = myModel.fit(cfg.epoch,cfg.learning_rate,cfg.weight_decay, train_loader, valid_loader)
 
 
+#history_3= history+history_2
+#history3_df = pd.DataFrame.from_dict(history_3)
+#history3_df.to_csv('history_3.csv') #50 epochs
+
+#postprocessing.plot_accuracies(history_3)
+#plt.savefig('accuracy.jpg')
+
+#postprocessing.plot_losses(history_3)
+#plt.savefig('losses')
+
+#-------------testing--------------------
 
 
+test_transformer = transforms.Compose([transforms.ToTensor(),
+                                  transforms.RandomVerticalFlip(cfg.transform_variables['vertical_flip_probability']),
+                                  transforms.RandomHorizontalFlip(cfg.transform_variables['horizontal_flip_probability']),
+                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])])
 
+test_dataset = ImageFolder(data_dir + '/test', transform=test_transformer)
 
+test_loader = DataLoader(test_dataset, shuffle = True, batch_size = cfg.test_batch_size)
 
+test_model = CNN()
+test_model.load_state_dict(torch.load('model.pth'))
 
+evaluate(test_model, test_loader) 
 

@@ -11,7 +11,7 @@ transform_variables = {'vertical_flip_probability': 0.5,
                        'Normalize_mean': [0.485, 0.456, 0.406],
                        'Normalize_std': [0.229, 0.224, 0.225]}
 batch_size = 32
-epoch = 25
+epoch = 50
 learning_rate = 0.001
 weight_decay = 0.01
 dropout_rate = 0.4
@@ -29,3 +29,6 @@ parameters_after_flatten = 18432
 Linear_layers = [1024, 512, 100]
 number_of_outputs = 10
 
+#testing
+
+test_batch_size = 50
