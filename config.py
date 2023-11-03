@@ -4,7 +4,7 @@ Hyperparamaters for the CNN
 
 @author: Sazzad
 """
-directory = 'D:\\birds'
+directory = 'birds'
 transform_variables = {'vertical_flip_probability': 0.5, 
                        'horizontal_flip_probability': 0.5,
                        'degrees': (0,20),

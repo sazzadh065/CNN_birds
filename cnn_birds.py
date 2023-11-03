@@ -24,18 +24,30 @@ import pandas as pd
 
 data_dir = cfg.directory
 classes = os.listdir(data_dir + "/train")
-train_transformer = transforms.Compose([transforms.ToTensor(),
+
+augment_transformer = transforms.Compose([transforms.ToTensor(),
                                   transforms.RandomVerticalFlip(cfg.transform_variables['vertical_flip_probability']),
                                   transforms.RandomHorizontalFlip(cfg.transform_variables['horizontal_flip_probability']),
-                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])])
+                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])
+                                  ])
 
 valid_transformer = transforms.Compose([transforms.ToTensor(),
                                   transforms.RandomVerticalFlip(cfg.transform_variables['vertical_flip_probability']),
                                   transforms.RandomHorizontalFlip(cfg.transform_variables['horizontal_flip_probability']),
-                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])])
+                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])
+                                  ])
 
-train_dataset = ImageFolder(data_dir + '/train', transform=train_transformer)
-valid_dataset = ImageFolder(data_dir + '/valid', transform=valid_transformer)
+normalize_transformer = transforms.Compose([transforms.ToTensor(),
+                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])
+                                  ])
+
+
+train_dataset = torch.utils.data.ConcatDataset([ImageFolder(data_dir + '/train', transform=augment_transformer), 
+                                                ImageFolder(data_dir + '/train', transform=normalize_transformer)])
+
+
+valid_dataset = torch.utils.data.ConcatDataset([ImageFolder(data_dir + '/valid', transform=valid_transformer), 
+                                                ImageFolder(data_dir + '/valid', transform=normalize_transformer)])
 
 
 batch_size = cfg.batch_size
@@ -124,7 +136,7 @@ print(history)
 torch.save(myModel.state_dict(), 'model.pth')
 #history_df = pd.DataFrame.from_dict(history)
 #history_df.to_csv('history.csv')
-#myModel.load_state_dict(torch.load('model.pth'))
+myModel.load_state_dict(torch.load('model.pth'))
 
 #history_2 = myModel.fit(cfg.epoch,cfg.learning_rate,cfg.weight_decay, train_loader, valid_loader)
 
@@ -143,13 +155,14 @@ torch.save(myModel.state_dict(), 'model.pth')
 
 
 test_transformer = transforms.Compose([transforms.ToTensor(),
-                                  transforms.RandomVerticalFlip(cfg.transform_variables['vertical_flip_probability']),
-                                  transforms.RandomHorizontalFlip(cfg.transform_variables['horizontal_flip_probability']),
-                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])])
+                                  #transforms.RandomVerticalFlip(cfg.transform_variables['vertical_flip_probability']),
+                                  #transforms.RandomHorizontalFlip(cfg.transform_variables['horizontal_flip_probability']),
+                                  transforms.Normalize(mean=cfg.transform_variables['Normalize_mean'], std=cfg.transform_variables['Normalize_std'])
+                                  ])
 
 test_dataset = ImageFolder(data_dir + '/test', transform=test_transformer)
 
-test_loader = DataLoader(test_dataset, shuffle = True, batch_size = cfg.test_batch_size)
+test_loader = DataLoader(test_dataset, shuffle = False, batch_size = cfg.test_batch_size)
 
 test_model = CNN()
 test_model.load_state_dict(torch.load('model.pth'))
