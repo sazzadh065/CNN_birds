@@ -11,7 +11,7 @@ transform_variables = {'vertical_flip_probability': 0.5,
                        'Normalize_mean': [0.485, 0.456, 0.406],
                        'Normalize_std': [0.229, 0.224, 0.225]}
 batch_size = 32
-epoch = 50
+epoch = 100
 learning_rate = 0.001
 weight_decay = 0.01
 dropout_rate = 0.4

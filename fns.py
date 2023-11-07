@@ -25,8 +25,8 @@ def training_step(model, batch):
 
 def accuracy(outputs, labels):
     _, preds = torch.max(outputs, dim=1)
-    print('Predictions: ', preds)
-    print('Original Labels: ', labels)
+    #print('Predictions: ', preds)
+    #print('Original Labels: ', labels)
     return torch.tensor(torch.sum(preds == labels).item() / len(preds))
     
 def validation_step(model, batch):
